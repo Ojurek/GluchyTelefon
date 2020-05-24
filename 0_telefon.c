@@ -8,11 +8,11 @@
 int main()
 {
 	char command[50];
-	int goo;
-	strcpy(command,"./1_program.out");
+	int go;
+	strcpy(command,"./1_konsola.o");
 	printf("command %s ...\n", command);
-	goo=system(command);
-	printf("otrzymano liczbe goo %d \n\n", goo);
+	go=system(command);
+	//printf("otrzymano liczbe goo %d \n\n", goo);
 
 	return 0;
 }

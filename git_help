@@ -1,0 +1,69 @@
+Sync changes you make in fork
+
+0. Change the current working directory to your local project
+
+1. List the current configured remote repository
+
+$ git remote -v
+origin	https://github.com/Ojurek/GluchyTelefon.git (fetch)
+origin	https://github.com/Ojurek/GluchyTelefon.git (push)
+
+2. Specify the current configured remote repository for your fork:
+$ git remote add upstream https://github.com/LukkaJSA/GluchyTelefon.git
+
+3. Verify the new upstream repository you,ve specified for you fork
+$ git remote -v
+origin	https://github.com/Ojurek/GluchyTelefon.git (fetch)
+origin	https://github.com/Ojurek/GluchyTelefon.git (push)
+upstream	https://github.com/LukkaJSA/GluchyTelefon.git (fetch)
+upstream	https://github.com/LukkaJSA/GluchyTelefon.git (push)
+
+4. Fetch the branches from the upstream repository
+(czyli sciagniecie z Githuba do gita na PC, ale jeszce bez scalenia)
+
+$ git fetch upstream
+remote: Enumerating objects: 11, done.
+remote: Counting objects: 100% (11/11), done.
+remote: Compressing objects: 100% (8/8), done.
+remote: Total 9 (delta 0), reused 9 (delta 0), pack-reused 0
+Unpacking objects: 100% (9/9), done.
+From https://github.com/LukkaJSA/GluchyTelefon
+ * [new branch]      master     -> upstream/master
+
+5.Check out your fork's local master 
+
+$ git checkout master
+Already on 'master'
+Your branch is up to date with 'origin/master'.
+
+W przykadzie efektem komendy bylo wyswietlenie
+> Switched to branch 'master'
+
+6 Merge the changes from upstream/master into your local master branch
+
+$ git merge upstream/master
+Updating 81c8248..50a25ad
+Fast-forward
+ 1_console.c |  1 +
+ 1_program.c | 19 +++++++++++++++++++
+ Makefile    |  8 ++++++++
+ README.md   |  1 +
+ telefon.c   | 18 ++++++++++++++++++
+ 5 files changed, 47 insertions(+)
+ create mode 100644 1_console.c
+ create mode 100644 1_program.c
+ create mode 100644 Makefile
+ create mode 100644 telefon.c
+
+7. Now your local copy of repository is syncing.
+To update your fork on github you must push your changes
+
+$ git push origin master
+Username for 'https://github.com': Ojurek
+Password for 'https://Ojurek@github.com': 
+Counting objects: 9, done.
+Compressing objects: 100% (8/8), done.
+Writing objects: 100% (9/9), 1.33 KiB | 1.33 MiB/s, done.
+Total 9 (delta 0), reused 0 (delta 0)
+To https://github.com/Ojurek/GluchyTelefon.git
+   81c8248..50a25ad  master -> master
