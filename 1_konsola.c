@@ -11,7 +11,7 @@ int main ()
 {
 	unsigned long int liczba;
 	int modulo; //wynik mozliwy od 0 do 9 
-	char command[100]="./2_argument.o ";
+	char command[100]="./2_argument.o -";
 	char result;
 	int status;
 
@@ -22,7 +22,6 @@ int main ()
 	strcat(command, &result);
 
 	printf("komenda to: %s\n", command);
-
 	status = system(command);
 return 0;
 
