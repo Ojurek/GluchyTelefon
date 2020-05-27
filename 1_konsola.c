@@ -16,13 +16,16 @@ int main ()
 	int status;
 
 	printf("Podaj liczbe dodatnia \n");
-	scanf("%li", &liczba);
+	scanf("%lu", &liczba);
 	modulo = liczba % 10;
 	result=modulo+'0';
 	strcat(command, &result);
 
 	printf("komenda to: %s\n", command);
 	status = system(command);
+	if (status==0){
+		printf ("Wywolano drugi program\n");
+	}
 return 0;
 
 }
