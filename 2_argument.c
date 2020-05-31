@@ -17,29 +17,30 @@ int main(int argc, char* argv[]){
 	int received;
 	int fd;
 	char* myfifo=FIFO;
-	int status;
 	ssize_t send=0;
+	int proc;
 
 	received = getopt(argc,argv,"0123456789")-'0';
 	printf("Program 2_argument\n");
  	printf("drugi program otrzymal %i\n", received);
 
 	//TODO obliczy nastpna liczbe pierwsza
+
 	
 	mkfifo(myfifo,0666);
 
-	status = system("./3_pipe.o &");//probuje uruchomic w bg
-	if (status==0){
-		printf ("Wywolano trzeci program\n");
+	proc=fork();
+
+	if (proc==0){
+		execl("./3_pipe.o","3_pipe.o", NULL);
 	}	
 
 	fd = open(myfifo, O_WRONLY);
 	printf("fd of pipe = %i\n", fd);
 	
-	//TODO obsuga bedu jesli nie otrzymamy fd
+	//TODO obsuga bledu jesli nie otrzymamy fd
 	send= write(fd, &received, 1); //TODO 1 zamienic na zmienna o wlasciwej dlugosci
 	printf("wyslano bajtow %zd\n", send);
-	close(fd);
-	
+	close(fd);	
 	unlink(myfifo);
 }

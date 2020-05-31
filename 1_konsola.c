@@ -23,8 +23,8 @@ int main ()
 
 	printf("komenda to: %s\n", command);
 	status = system(command);
-	if (status==0){
-		printf ("Wywolano drugi program\n");
+	if (status!=0){
+		printf ("program drugi zwrocil blad\n");
 	}
 return 0;
 
