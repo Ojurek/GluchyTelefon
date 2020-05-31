@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#define FIFO "/tmp/FIFO"
+#define FIFO "/tmp/myfifo"
 
 int main(void){
 
@@ -16,8 +16,7 @@ int main(void){
 	printf("Program 3_pipe\n");
 	
 	fd = open(myfifo, O_RDONLY);
-	sleep(5);
-
+	printf("program 3 otrzymal fd= %i",fd);
 	count=read(fd, &received, 10); //TODO sprawdzic max dugosc
 	printf("Program 3_pipe otrzymal wartosc %lu\n", received);
 	printf("otrzymano bajtow %zd\n", count);
