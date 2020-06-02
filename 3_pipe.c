@@ -18,19 +18,21 @@ int main(void){
 	char* myfifo=FIFO;
 	unsigned long int received=0;
 
-	printf("Program 3_pipe\n");
+
+	printf("\n\nProgram 3_pipe\n");
 	
 	fd = open(myfifo, O_RDONLY);
-	printf("program 3 otrzymal fd= %i",fd);
+	printf("Program 3 otrzymal fd= %i\n",fd);
 	count=read(fd, &received, 10); //TODO sprawdzic max dugosc
 	printf("Program 3_pipe otrzymal wartosc %lu\n", received);
 	printf("otrzymano bajtow %zd\n", count);
 	
-	long int numbersend = 848285;
-	send(numbersend);
-
-
- 	//close(fd);
+	//long int numbersend = 848285;
+	
+	send(received);
+	//sleep(1);
+ 	close(fd);
+	
 
 return 0;
 }
@@ -38,22 +40,21 @@ return 0;
 
 void send(const unsigned int number)
 {
-    int fd1;
+	int fd1;
     
-    char *pTxt=NULL;
-    asprintf(&pTxt, "%u", number);
-    fd1=open(CHRDEV_PATH,O_WRONLY);
-    if(fd1<0)
-    {
-        perror("Failed to open the device CHRDEV");
-        exit(0);
-    }
-    if( write(fd1,pTxt,sizeof(int)*8) < 0 )
-    {
-        perror("Couldn't write to CHRDEV");
-        exit(0);
-    }
-    close(fd1);
-    free(pTxt);
-
+	char *pTxt=NULL;
+	asprintf(&pTxt, "%u", number);
+	fd1=open(CHRDEV_PATH,O_WRONLY);
+	if(fd1<0)
+	{
+		perror("Failed to open the device CHRDEV");
+		exit(0);
+	}
+	if( write(fd1,pTxt,sizeof(int)*8) < 0 )
+	{
+		perror("Couldn't write to CHRDEV");
+		exit(0);
+	}
+	close(fd1);
+	free(pTxt);
 }

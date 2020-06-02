@@ -7,12 +7,11 @@ int main()
     
     char buffer[225];
     sleep(1);
-
+    printf("\n\nProgram 4_chrdev\n");
     long int number = receive();
 
     sprintf(buffer, "%ld", number);
-    printf("odczytano z chr dev liczbe %s\n\n", buffer);
-
+    printf("odczytano z chr dev liczbe %s\n", buffer);
     return 0;
 }
 
@@ -34,6 +33,5 @@ long int receive()
         exit(0);
     }
     close(fd);
-
     return atol(buffer);
 }

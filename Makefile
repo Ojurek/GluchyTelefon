@@ -8,13 +8,14 @@ compile:
 	$(CC) 1_konsola.c -o 1_konsola.o
 	$(CC) 2_argument.c -o 2_argument.o
 	$(CC) 3_pipe.c -o 3_pipe.o
+	$(CC) 4_chrdev.c -o 4_chrdev.o
 
 build:
 	cd $(CHDEV) && $(MAKE) build
 	cd $(CHDEV) ; sudo insmod jajko.ko
 
 run:
-	./0_telefon.o
+	sudo ./0_telefon.o
 
 clean:
 	rm -rf *.o

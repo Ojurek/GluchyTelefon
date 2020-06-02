@@ -14,7 +14,8 @@ int main ()
 	char command[100]="./2_argument.o -";
 	char result;
 	int status;
-
+	
+	printf("\n\nProgram 1_konsola\n");
 	printf("Podaj liczbe dodatnia \n");
 	scanf("%lu", &liczba);
 	modulo = liczba % 10;

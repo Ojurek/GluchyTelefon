@@ -11,7 +11,10 @@ int main()
 	strcpy(command,"./1_konsola.o");
 	printf("command %s ...\n", command);
 	system(command);
-
+	printf("zakonczenie działania programow 1-3\n");
+	char command2[20]="./4_chrdev.o";
+	system(command2);
+	printf("zakonczenie działania telefon.o\n");
 
 	return 0;
 }

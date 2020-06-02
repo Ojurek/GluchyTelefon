@@ -19,10 +19,10 @@ int main(int argc, char* argv[]){
 	char* myfifo=FIFO;
 	ssize_t send=0;
 	int proc;
-
+	
 	received = getopt(argc,argv,"0123456789")-'0';
-	printf("Program 2_argument\n");
- 	printf("drugi program otrzymal %i\n", received);
+	printf("\n\nProgram 2_argument\n");
+ 	printf("Drugi program otrzymal %i\n", received);
 
 	//TODO obliczy nastpna liczbe pierwsza
 
