@@ -1,1 +1,0 @@
-cmd_/home/jurek/work/gluchy_telfon/GluchyTelefon/chdev/jajko.mod := { echo  /home/jurek/work/gluchy_telfon/GluchyTelefon/chdev/jajko.o; echo; } > /home/jurek/work/gluchy_telfon/GluchyTelefon/chdev/jajko.mod
