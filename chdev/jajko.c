@@ -14,7 +14,7 @@ MODULE_VERSION("1.0");
 
 static int majorNumber;
 static char message[BUFFER_SIZE] = {0};
-static int message_counter=0;
+static size_t message_len;
 static struct class *jajkoCharClass = NULL;
 static struct device *jajkoCharDevice = NULL;
 
@@ -71,18 +71,21 @@ static void __exit jajko_exit(void)
 
 static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *offset)
 {
-	if (message_counter==0){
+	if (message_len<len){
 		return 0;
 	}
-	copy_to_user(buffer, message, len);//zamiast len bylo BUFFER_SIZE
-	message_counter--;
+	copy_to_user(buffer, message, len);
+	message_len-=len;
 	return len;
 }
 
 static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, loff_t *offset)
 {
-	copy_from_user(message, buffer, len);//strcpy(message, buffer);
-	message_counter++;	
+	if (len>BUFFER_SIZE){
+		return 0;
+	}
+	copy_from_user(message, buffer, len);
+	message_len=len;	
 	return len;
 }
 
