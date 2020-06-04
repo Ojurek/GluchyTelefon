@@ -22,6 +22,10 @@ clean:
 
 uninstall:
 	-sudo rmmod jajko
+	
+tcp:
+	gcc 6_server.c -o server.o
+	gcc 5_clientTCP.c -o client.o
 
 
 info:
