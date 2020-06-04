@@ -2,36 +2,34 @@
 
 #include "4_chrdev.h"
 
-int main()
-{
-    
-    char buffer[225];
-    sleep(1);
-    printf("\n\nProgram 4_chrdev\n");
-    long int number = receive();
+int main(){
 
-    sprintf(buffer, "%ld", number);
-    printf("odczytano z chr dev liczbe %s\n", buffer);
+	int received;	
+	int fd;
+	ssize_t readed=0;
+	
+	fd = open(CHRDEV_PATH, O_RDONLY);
+		
+	if (fd < 0){
+		perror("Failed to open the device CHRDEV");
+		exit(-1);
+ 	}
+
+	while (readed<=0){ 
+		readed=read(fd, (char*)&received, sizeof(int)); 
+		if (readed < 0){
+			perror("Couldn't read from CHRDEV");
+			exit(-1);
+		}
+		
+		if (readed>0){		
+			printf("Program 4_chrdev otrzymal wartosc %i\n", received);
+			readed=0;
+		}
+		sleep(1);
+	}
+
+	close(fd);
+
     return 0;
-}
-
-
-long int receive()
-{
-    int fd;
-    char buffer[sizeof(int) * 8];
-    fd = open(CHRDEV_PATH, O_RDONLY);
-    if (fd < 0)
-    {
-        perror("Failed to open the device CHRDEV");
-        exit(0);
-    }
-
-    if (read(fd, buffer, sizeof(int) * 8) < 0)
-    {
-        perror("Couldn't read from CHRDEV");
-        exit(0);
-    }
-    close(fd);
-    return atol(buffer);
 }

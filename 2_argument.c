@@ -1,6 +1,7 @@
 //Wejscie: argument do programu parsowany za pomoca getopt
 //Modyfikacja/wyjscie x=Nastepna liczba pierwsza
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -18,16 +19,17 @@ int main(int argc, char* argv[]){
 	int fd;
 	char* myfifo=FIFO;
 	ssize_t send=0;
-	int proc;
+	pid_t proc;
 	
 	received = getopt(argc,argv,"0123456789")-'0';
 	printf("\n\nProgram 2_argument\n");
  	printf("Drugi program otrzymal %i\n", received);
 
 	//TODO obliczy nastpna liczbe pierwsza
-
 	
 	mkfifo(myfifo,0666);
+
+//	system("./3_pipe.o");
 
 	proc=fork();
 
@@ -36,11 +38,11 @@ int main(int argc, char* argv[]){
 	}	
 
 	fd = open(myfifo, O_WRONLY);
-	printf("fd of pipe = %i\n", fd);
 	
 	//TODO obsuga bledu jesli nie otrzymamy fd
-	send= write(fd, &received, 1); //TODO 1 zamienic na zmienna o wlasciwej dlugosci
-	printf("wyslano bajtow %zd\n", send);
+	send= write(fd, &received, sizeof(int)); 
+	send++;//TODO usunac
 	close(fd);	
 	unlink(myfifo);
+return 0;
 }
