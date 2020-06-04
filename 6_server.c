@@ -1,19 +1,19 @@
 #include "6_server.h"
 
 
-void receive (int sockfd) 
+void receive (int sock_fd) 
 { 
 	char buff[MAX]; 
 	int n; 
 	// Odczytaj wiadomosc od klienta 
-	read(sockfd, buff, sizeof(buff)); 
+	read(sock_fd, buff, sizeof(buff)); 
 	// Wyswietl wiadomosc od klienta 
 	printf("Otrzymano wiadomość: %s ", buff); 
 		
 } 
 
 // Funkcja servera nasłuchująca komunikaty wysyłane przez klienta. 
-void run(int sockfd) 
+void run(int sock_fd) 
 { 
 	char buff[MAX]; 
 	int n; 
@@ -21,7 +21,7 @@ void run(int sockfd)
 	while(1)
 	{ 
 		// Odczytaj wiadomosc od klienta 
-		read(sockfd, buff, sizeof(buff)); 
+		read(sock_fd, buff, sizeof(buff)); 
 		// Wyswietl wiadomosc od klienta 
 		printf("Otrzymano wiadomość: %s ", buff); 
 		
@@ -35,17 +35,17 @@ void run(int sockfd)
 } 
 
 // Inicjalizacja serwera
-int initialize_server(int *sockfd) 
+int initialize_server(int *sock_fd) 
 { 
-	int connfd, len; 
+	int conn_fd, len; 
 	struct sockaddr_in servaddr, cli; 
 
 	// Utwórz serwer 
-	*sockfd = socket(AF_INET, SOCK_STREAM, 0); 
-	if (*sockfd == -1)
+	*sock_fd = socket(AF_INET, SOCK_STREAM, 0); 
+	if (*sock_fd == -1)
 	{ 
 		printf("Niepowodzenie w utworzeniu serwera...\n"); 
-		exit(0); 
+		exit(-1); 
 	} 
 	else
 		printf("Pomyślnie utworzono gniazdo Socket...\n"); 
@@ -58,52 +58,46 @@ int initialize_server(int *sockfd)
 	servaddr.sin_port = htons(PORT); 
 
 	// Połącz nowo stworzony serwer do podanego IP 
-	if ((bind(*sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) 
+	if ((bind(*sock_fd, (SA*)&servaddr, sizeof(servaddr))) != 0) 
 	{ 
-		printf("Połączenie nie udało się...\n"); 
+		printf("Połączenie serwera nie udało się...\n"); 
 		perror("Error printed by perror");
-		exit(0); 
+		exit(-1); 
 	} 
 	else
 		printf("Serwer został połączony \"binded\"..\n"); 
 
 	// Serwer oczekuje na połączenie od klienta - nasłuchiwanie
-	if ((listen(*sockfd, 5)) != 0)
+	if ((listen(*sock_fd, 5)) != 0)
 	{ 
 		printf("Niepowodzenie nasłuchiwania...\n"); 
-		exit(0); 
+		exit(-1); 
 	} 
 	else
 		printf("Serwer oczekuje na połączenie...\n"); 
 	len = sizeof(cli); 
 
 	// Zaakceptopwanie pakietu danych od klienta 
-	connfd = accept(*sockfd, (SA*)&cli, &len); 
-	if (connfd < 0) 
+	conn_fd = accept(*sock_fd, (SA*)&cli, &len); 
+	if (conn_fd < 0) 
 	{ 
-		printf("Niepowodzenie acept...\n"); 
-		exit(0); 
+		printf("Nie udalo sie zaakceptowac polaczenia z klientem\n"); 
+		exit(-1); 
 	} 
 	else
-		printf("Pomyślnie zaakceptowano połączenie z klientem...\n"); 	
+		printf("Pomyślnie zaakceptowano połączenie z klientem.\n"); 	
 	
 	// Zwróc deskryptor pliku do głównego programu
-	return connfd;
+	return conn_fd;
 }
 	
 int main()
 {
-	int sockfd,connfd;
+	int sock_fd,conn_fd;
 	
-	connfd = initialize_server(&sockfd);
-	receive(connfd);
-	close(sockfd);
+	conn_fd = initialize_server(&sock_fd);
+	receive(conn_fd);
+	close(sock_fd);
 
-	/*
-	connfd = initialize_server(&sockfd);
-	receive(connfd);
-	close(sockfd);*/
-	
-	
 	printf ("Serwer zakończył działanie\n");
 } 

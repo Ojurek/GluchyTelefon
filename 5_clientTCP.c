@@ -54,7 +54,7 @@ int main()
 	if (sockfd == -1) 
 	{ 
 		printf("Utworzenie socket nie powiodło się...\n"); 
-		exit(0); 
+		exit(-1); 
 	} 
 	else
 		printf("Socket utworzony..\n"); 
@@ -68,15 +68,13 @@ int main()
 	// connect the client socket to server socket 
 	if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0) 
 	{ 
-		printf("Połączenie z serwerem nie udało się...\n"); 
-		exit(0); 
+		printf("Połączenie z serwerem nie udało się.\n"); 
+		exit(-1); 
 	} 
 	else
-		printf("Połączony z serwerem..\n"); 
-
+		printf("Połączony z serwerem.\n"); 
 
 	send_m(sockfd);
-
 
 	close(sockfd); 
 } 

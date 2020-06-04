@@ -50,9 +50,12 @@ int main ()
 	
 	catch_signal(SIGINT);
 
-	//start program 4 in background
-	//system("./4_chrdev.o &");
+	//start program 6
+	//
 
+	//start program 5
+
+	//start program 4
 	proc=fork();
 	if (proc==0){
 		pid_program_4=getpid();
@@ -70,7 +73,7 @@ int main ()
 		if (status!=0){
 			printf ("program drugi zwrocil blad\n");
 		}
-		sleep(3);
+		sleep(1);
 		strcpy(command,command_pre);
 	}
 return 0;

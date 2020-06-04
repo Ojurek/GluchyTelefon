@@ -8,7 +8,7 @@
 #include "jajko.h"
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("RS");
+MODULE_AUTHOR("RS&LJ&JO");
 MODULE_DESCRIPTION("Linux Kernel Module over chrdev.");
 MODULE_VERSION("1.0");
 
@@ -62,9 +62,11 @@ static int __init jajko_init(void)
 
 static void __exit jajko_exit(void)
 {
+
     device_destroy(jajkoCharClass, MKDEV(majorNumber, 0));
     class_unregister(jajkoCharClass);
     class_destroy(jajkoCharClass);
+
     unregister_chrdev(majorNumber, DEVICE_NAME);
     printk(KERN_INFO "JAJKO: Shutting down JAJKO LKM!\n");
 }
