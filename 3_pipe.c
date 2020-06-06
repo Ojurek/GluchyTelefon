@@ -2,11 +2,7 @@
 #define _GNU_SOURCE 1
 #endif
 
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+
 #include "3_pipe.h"
 
 #define FIFO "/tmp/myfifo"
@@ -17,6 +13,7 @@ int main(void){
 	ssize_t count=0;
 	char* myfifo=FIFO;
 	int received=0;
+	char tekst [33];
 
 	printf("\n\nProgram 3_pipe\n");
 	
@@ -24,16 +21,29 @@ int main(void){
 		
 	count=read(fd, &received, sizeof(int));
 	printf("Program 3_pipe otrzymal wartosc %i\n", received);
+	set_byte(received, tekst);
+	printf("String po ustawieniu bitu %s\n", tekst);
 	count++;//TODO ususunac, kontrola bledu zrobic
-	//long int numbersend = 848285;
 	close(fd);
-	send(received);	
+	send(tekst);	
 	
 return 0;
 }
 
+void set_byte(int position, char *tekst)
+{
+	int n = 31;
+	while(n>=0)
+	{
+		tekst[n]='0';
+		n--;
+	}
+	tekst[32]='\0';
+	tekst[position-1]='1';
+}
 
-void send(const unsigned int number)
+
+void send(char *tekst)
 {
 	int fd;    
 	//char *pTxt=NULL;
@@ -45,7 +55,7 @@ void send(const unsigned int number)
 		perror("Failed to open the device CHRDEV");
 		exit(-1);
 	}
-	if( write(fd,(char*)&number,sizeof(int)) < 0 )//bylo sizeof(int)*8
+	if( write(fd,(char*)&tekst,sizeof(tekst)) < 0 )//bylo sizeof(int)*8
 	{
 		perror("Couldn't write to CHRDEV");
 		exit(-1);
@@ -53,3 +63,9 @@ void send(const unsigned int number)
 	close(fd);
 	//free(pTxt);  raczej niepotrzebne
 }
+
+
+
+
+
+

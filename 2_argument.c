@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdint.h>
 
 
 #define FIFO "/tmp/myfifo"
@@ -42,7 +43,7 @@ int next_prime_no(int number){
 
 int main(int argc, char* argv[]){
 
-	int received;
+	uint32_t received;
 	int fd;
 	char* myfifo=FIFO;
 	ssize_t send=0;
@@ -67,7 +68,7 @@ int main(int argc, char* argv[]){
 	fd = open(myfifo, O_WRONLY);
 	
 	//TODO obsuga bledu jesli nie otrzymamy fd
-	send= write(fd, &received, sizeof(int)); 
+	send= write(fd, &received, sizeof(uint32_t)); 
 	send++;//TODO usunac
 	close(fd);	
 	unlink(myfifo);
