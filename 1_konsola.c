@@ -62,6 +62,18 @@ int main ()
 		execl("./4_chrdev.o","4_chrdev.o", NULL);
 	}	
 	
+	proc=fork();
+	if (proc==0){
+	//	pid_program_4=getpid();
+		execl("./5_netlink.o","5_netlink.o", NULL);
+	}	
+
+	proc=fork();
+	if (proc==0){
+	//	pid_program_4=getpid();
+		execl("./5_netlink_rec.o","5_netlink_rec.o", NULL);
+	}	
+
 	while (1){
 		printf("Podaj liczbe dodatnia \n");
 		scanf("%u", &liczba);

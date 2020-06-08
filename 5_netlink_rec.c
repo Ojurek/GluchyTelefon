@@ -12,7 +12,7 @@
 
 int main() {
 	
-	char* received="Hello";
+	//int received;
 	int fd;
 	struct sockaddr_nl src_addr;
 	struct sockaddr_nl dest_addr;
@@ -49,23 +49,26 @@ int main() {
 	nlh->nlmsg_pid = getpid();                       //src application unique id
 	nlh->nlmsg_flags = 0;
 
-  	strcpy(NLMSG_DATA(nlh), received);   //copy the payload to be sent
-
 	iov.iov_base = (void *)nlh;     //netlink message header base address
 	iov.iov_len = nlh->nlmsg_len;   //netlink message length
 
 	dest_addr.nl_family = AF_NETLINK; // protocol family
-	dest_addr.nl_pid = 0;   //destination process id
+	dest_addr.nl_pid = getpid();   //destination process id
 	dest_addr.nl_groups = (1 << 3); 
 
-	msg.msg_name = (void *)&dest_addr;
-	msg.msg_namelen = sizeof(dest_addr);
-	msg.msg_iov = &iov;
-	msg.msg_iovlen = 1;
+	msg.msg_name = (void *)&dest_addr;  //czy potrzebne??
+	msg.msg_namelen = sizeof(dest_addr); //czy potrzebne??
+	msg.msg_iov = &iov; //czy potrzebne??
+	msg.msg_iovlen = 1; //czy potrzebne??
 
-	//send the message
-	sendmsg(fd, &msg, 0);
-	printf("Send message %s\n", (char *)NLMSG_DATA(nlh));
+  printf("Listening to the MCAST address (3): %d\n", src_addr.nl_groups);
 
-	close(fd); // close the socket
+while (1) {
+    //receive the message
+    recvmsg(fd, &msg, 0);
+	sleep(1);
+    printf("Received message: %s\n", (char*)NLMSG_DATA(nlh));
+  }
+
+  close(fd); // close the socket
 }

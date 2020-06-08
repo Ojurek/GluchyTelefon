@@ -1,0 +1,1 @@
+cmd_/home/jurek/work/gluchy_telfon/GluchyTelefon/netlink/netlink_kernel.mod := { echo  /home/jurek/work/gluchy_telfon/GluchyTelefon/netlink/netlink_kernel.o; echo; } > /home/jurek/work/gluchy_telfon/GluchyTelefon/netlink/netlink_kernel.mod
