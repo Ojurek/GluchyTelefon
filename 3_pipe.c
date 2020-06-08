@@ -13,7 +13,6 @@ int main(void){
 	ssize_t count=0;
 	char* myfifo=FIFO;
 	int received=0;
-	char tekst [33];
 
 	printf("\n\nProgram 3_pipe\n");
 	
@@ -21,17 +20,32 @@ int main(void){
 		
 	count=read(fd, &received, sizeof(int));
 	printf("Program 3_pipe otrzymal wartosc %i\n", received);
-	set_byte(received, tekst);
-	printf("String po ustawieniu bitu %s\n", tekst);
+
+	received=set_bit(received);
+
+	printf("Wartosc po ustawieniu bitu %i\n", received);
 	count++;//TODO ususunac, kontrola bledu zrobic
 	close(fd);
-	send(tekst);	
+	send(received);	
 	
 return 0;
 }
 
-void set_byte(int position, char *tekst)
+int set_bit(int bit){
+// operator przesunicia bitow o 5 miejsc w lewo 1<<5
+	
+	int setted_int=0;
+	setted_int = setted_int | (1<<bit);
+	// lub 	*v |= (1<<bit);
+
+	return setted_int;
+
+}
+/*
+int set_bit(int position, char *tekst)
 {
+
+	
 	int n = 31;
 	while(n>=0)
 	{
@@ -41,9 +55,9 @@ void set_byte(int position, char *tekst)
 	tekst[32]='\0';
 	tekst[position-1]='1';
 }
+*/
 
-
-void send(char *tekst)
+void send(int received)
 {
 	int fd;    
 	//char *pTxt=NULL;
@@ -55,7 +69,7 @@ void send(char *tekst)
 		perror("Failed to open the device CHRDEV");
 		exit(-1);
 	}
-	if( write(fd,(char*)&tekst,sizeof(tekst)) < 0 )//bylo sizeof(int)*8
+	if( write(fd,&received,sizeof(int)) < 0 )
 	{
 		perror("Couldn't write to CHRDEV");
 		exit(-1);

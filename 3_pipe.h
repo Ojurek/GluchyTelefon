@@ -13,8 +13,8 @@
 #define CHRDEV_PATH "/dev/jajko"
 
 //funkcja wyślij po character device
-void send(char *tekst);
+void send(int received);
 
 //funkcja ustawiająca bit na wymaganej pozycji position
-void set_byte(int position, char *tekst);
+int set_bit(int bit);
 

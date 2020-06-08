@@ -18,7 +18,7 @@ int main(){
  	}
 
 	while (readed<=0){ 
-		readed=read(fd, (char*)&received, sizeof(int)); 
+		readed=read(fd, &received, sizeof(int)); 
 		if (readed < 0){
 			perror("Couldn't read from CHRDEV");
 			exit(-1);
