@@ -28,25 +28,18 @@ int main() {
     	return -1;
 	}
 
-	nlh=(struct nlmsghdr *) malloc(NLMSG_SPACE(NLINK_MSG_LEN));
-  //fill the iovec structure
-	
-  //define the message header for message
-  //sending
-
-
-	memset(nlh, 0, NLMSG_SPACE(NLINK_MSG_LEN));
 	memset(&src_addr, 0, sizeof(src_addr));
 
 	src_addr.nl_family = AF_NETLINK;   //AF_NETLINK socket protocol
-	src_addr.nl_pid = getpid();               //application unique id
-	src_addr.nl_groups = (1 << 2);            //send to multicast address 2
+	src_addr.nl_pid = 1;               //application unique id
+	src_addr.nl_groups = 0;            //send to multicast address 2
 
-  //attach socket to unique id or address
 	bind(fd, (struct sockaddr *)&src_addr, sizeof(src_addr));
 
+	nlh=(struct nlmsghdr *) malloc(NLMSG_SPACE(NLINK_MSG_LEN));
+	memset(nlh, 0, NLMSG_SPACE(NLINK_MSG_LEN));
 	nlh->nlmsg_len = NLMSG_SPACE(NLINK_MSG_LEN);   //netlink message length 
-	nlh->nlmsg_pid = getpid();                       //src application unique id
+	nlh->nlmsg_pid = 1;                       //src application unique id
 	nlh->nlmsg_flags = 0;
 
   	strcpy(NLMSG_DATA(nlh), received);   //copy the payload to be sent
@@ -56,7 +49,7 @@ int main() {
 
 	dest_addr.nl_family = AF_NETLINK; // protocol family
 	dest_addr.nl_pid = 0;   //destination process id
-	dest_addr.nl_groups = (1 << 3); 
+	dest_addr.nl_groups = 0; 
 
 	msg.msg_name = (void *)&dest_addr;
 	msg.msg_namelen = sizeof(dest_addr);
@@ -64,6 +57,7 @@ int main() {
 	msg.msg_iovlen = 1;
 
 	//send the message
+	sleep(3);
 	sendmsg(fd, &msg, 0);
 	printf("Send message %s\n", (char *)NLMSG_DATA(nlh));
 
