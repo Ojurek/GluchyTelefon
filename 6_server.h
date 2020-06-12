@@ -10,6 +10,9 @@
 #include <sys/socket.h> 
 #include <sys/types.h>
 #include <errno.h>
+#include <stdint.h>
+#include <signal.h>
+#include <string.h>
 
 #define MAX 80 
 #define PORT 8080 

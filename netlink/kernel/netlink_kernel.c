@@ -55,6 +55,7 @@ struct nlmsghdr {
 
 	pid = netlink_msg_hdr->nlmsg_pid; //pid of sending process
 
+
 /*
 nlmsg_new() - Allocate a new netlink message
  * @payload: size of the message payload
@@ -111,7 +112,7 @@ static int __init netlink_init(void) {
     		.input = netlink_recv_msg,
 	};
 
-	netlink_sock = netlink_kernel_create(&init_net, NETLINK_USER, &cfg);
+	netlink_sock = netlink_kernel_create(&init_net, NETLINK_USER, &cfg);//byo NETLINK_USER
 //netlink_sock = netlink_kernel_create(&init_net, NETLINK_USER, 0, netlink_recv_msg,NULL,THIS_MODULE);
 	if(!netlink_sock){
 		printk(KERN_ALERT "Error creating netlink socket.\n");

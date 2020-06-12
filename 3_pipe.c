@@ -1,85 +1,84 @@
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE 1
-#endif
-
 
 #include "3_pipe.h"
 
 #define FIFO "/tmp/myfifo"
 
+static int fd_pipe;
+static int fd_dev;    
+
+void sig_handler(int sig, siginfo_t* info, void *uncotext){
+
+	printf("Program 3: signal handler\n");
+	system("ps");
+	close(fd_pipe);
+	close(fd_dev);
+	exit(0);
+}
+
+void catch_signal(int sig){
+	static struct sigaction my_sigact;
+	
+	memset(&my_sigact,0,sizeof(my_sigact));
+	my_sigact.sa_sigaction=sig_handler;
+	my_sigact.sa_flags=SA_SIGINFO;
+
+	sigaction(sig,&my_sigact,NULL);
+}
+
+
+
+
 int main(void){
 
-	int fd;
 	ssize_t count=0;
 	char* myfifo=FIFO;
-	int received=0;
+	uint32_t received=0;
 
-	printf("\n\nProgram 3_pipe\n");
+	printf("\nProgram 3_pipe\n");
+
+	catch_signal(SIGINT);
 	
-	fd = open(myfifo, O_RDONLY);
-		
-	count=read(fd, &received, sizeof(int));
-	printf("Program 3_pipe otrzymal wartosc %i\n", received);
+	fd_pipe = open(myfifo, O_RDONLY);
+	
+	while(1){	
+		count=read(fd_pipe, &received, sizeof(uint32_t));
+		if (count>0){
+			printf("Program 3_pipe otrzymal wartosc %i\n", received);
+			received=set_bit(received);
+			printf("Program 3: Wartosc po ustawieniu bitu %i\n", received);
+			send(received);
+		}	
+		sleep(0.5);
+	}	
 
-	received=set_bit(received);
-
-	printf("Wartosc po ustawieniu bitu %i\n", received);
-	count++;//TODO ususunac, kontrola bledu zrobic
-	close(fd);
-	send(received);	
 	
 return 0;
 }
 
-int set_bit(int bit){
-// operator przesunicia bitow o 5 miejsc w lewo 1<<5
+uint32_t set_bit(uint32_t bit){
 	
-	int setted_int=0;
-	setted_int = setted_int | (1<<bit);
-	// lub 	*v |= (1<<bit);
+	uint32_t setted_int=0;
+
+	setted_int = setted_int | (1<<bit);// operator przesunicia bitow o 5 miejsc w lewo 1<<5
 
 	return setted_int;
 
 }
-/*
-int set_bit(int position, char *tekst)
+
+void send(uint32_t received)
 {
 
-	
-	int n = 31;
-	while(n>=0)
-	{
-		tekst[n]='0';
-		n--;
-	}
-	tekst[32]='\0';
-	tekst[position-1]='1';
-}
-*/
 
-void send(int received)
-{
-	int fd;    
-	//char *pTxt=NULL;
-
-	//asprintf(&pTxt, "%u", number);
-	fd=open(CHRDEV_PATH,O_WRONLY);
-	if(fd<0)
+	fd_dev=open(CHRDEV_PATH,O_WRONLY);
+	if(fd_dev<0)
 	{
-		perror("Failed to open the device CHRDEV");
+		perror("Program 3: Failed to open the device CHRDEV");
 		exit(-1);
 	}
-	if( write(fd,&received,sizeof(int)) < 0 )
+	if( write(fd_dev,&received,sizeof(uint32_t)) < 0 )
 	{
-		perror("Couldn't write to CHRDEV");
+		perror("Program 3: Couldn't write to CHRDEV");
 		exit(-1);
 	}
-	close(fd);
-	//free(pTxt);  raczej niepotrzebne
 }
-
-
-
-
-
 

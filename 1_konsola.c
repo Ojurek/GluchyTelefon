@@ -8,17 +8,18 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <stdint.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
-static int pid_program_4;
+#define FIFO "/tmp/myfifo"
+//static int pid_program_4;
 
 void sig_handler(int sig, siginfo_t* info, void *uncotext){
 
-	printf("sig_handler\n");
-	system("ps");
-	kill (pid_program_4, SIGTERM);//TODO poprawic
+	printf("Program 1: signal handler\n");
 	sleep(2);
-	//kill (pid_program_4, SIGKILL);
-	system("ps");
+	unlink(FIFO);
+	printf("Program 1: exit\n");
 	exit(0);
 }
 
@@ -51,31 +52,29 @@ int main ()
 	catch_signal(SIGINT);
 
 	//start program 6
-	//
+	proc=fork();
+	if (proc==0){
+		execl("./6_server.o","6_server.o", NULL);
+	}	
 
-	//start program 5
+	//create pipe for program 3 - 4
+	mkfifo(FIFO,0666);
 
 	//start program 4
 	proc=fork();
 	if (proc==0){
-		pid_program_4=getpid();
 		execl("./4_chrdev.o","4_chrdev.o", NULL);
 	}	
-	
+
+	//start program 3
 	proc=fork();
 	if (proc==0){
-	//	pid_program_4=getpid();
-		execl("./5_netlink.o","5_netlink.o", NULL);
+		execl("./3_pipe.o","3_pipe.o", NULL);
 	}	
-
-	proc=fork();
-	if (proc==0){
-	//	pid_program_4=getpid();
-		execl("./5_netlink_rec.o","5_netlink_rec.o", NULL);
-	}	
-
-	while (1){
-		printf("Podaj liczbe dodatnia \n");
+		
+	while (1){		
+		sleep(5);
+		printf("Program 1: Podaj liczbe dodatnia \n");
 		scanf("%u", &liczba);
 		modulo = liczba % 10;
 		result=modulo+'0';
@@ -83,9 +82,8 @@ int main ()
 
 		status = system(command);
 		if (status!=0){
-			printf ("program drugi zwrocil blad\n");
+			printf ("Program 1: Program drugi zwrocil blad\n");
 		}
-		sleep(1);
 		strcpy(command,command_pre);
 	}
 return 0;
