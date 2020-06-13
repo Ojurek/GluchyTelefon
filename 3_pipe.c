@@ -9,7 +9,6 @@ static int fd_dev;
 void sig_handler(int sig, siginfo_t* info, void *uncotext){
 
 	printf("Program 3: signal handler\n");
-	system("ps");
 	close(fd_pipe);
 	close(fd_dev);
 	exit(0);

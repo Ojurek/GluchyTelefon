@@ -2,15 +2,14 @@
 
 #include "4_chrdev.h"
 
-static int fd;
-static int sockfd;
+static int fd_dev;
+static int fd_sock;
 
 void sig_handler(int sig, siginfo_t* info, void *uncotext){
 
 	printf("Program 4: signal handler\n");
-	system("ps");
-	close(fd);
-	close(sockfd); 
+	close(fd_dev);
+	close(fd_sock); 
 	exit(0);
 }
 
@@ -24,16 +23,34 @@ void catch_signal(int sig){
 	sigaction(sig,&my_sigact,NULL);
 }
 
-int create_socket(){
+uint32_t lustrzane_odbicie(uint32_t number){
 
-	int sockfd; 
-	struct sockaddr_in servaddr; 
+ 	uint32_t transformed = 0;
 
-	catch_signal(SIGINT);
+	for (int i=0;i<32;i++){
+		if ( (number & (1<<i)) > 0 ){
+			transformed = transformed | (1<<(31-i));
+		}
+	}	
+
+return transformed;
+}
+
+int main(){
+
+	uint32_t received;	
+	ssize_t readed=0;	
+	ssize_t writed;
+	struct sockaddr_in servaddr;
+	//char* test="test"; 
+
+	printf("\nProgram 4_chrdev\n");
 	
-	// Stwórz i zweryfikuj socket
-	sockfd = socket(AF_INET, SOCK_STREAM, 0); 
-	if (sockfd == -1) { 
+	catch_signal(SIGINT);	
+
+	///create socket
+	fd_sock = socket(AF_INET, SOCK_STREAM, 0); 
+	if (fd_sock == -1) { 
 		printf("Program 4: Utworzenie socket nie powiodło się...\n"); 
 		exit(-1); 
 	} 
@@ -49,7 +66,7 @@ int create_socket(){
 	servaddr.sin_port = htons(PORT); 
 
 	// connect the client socket to server socket 
-	while (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0) 
+	while (connect(fd_sock, (SA*)&servaddr, sizeof(servaddr)) != 0) 
 	{ 
 		printf("Program 4: Nieudana proba polaczenia z serwerem. Probuje dalej...\n"); 
 		sleep(2);
@@ -57,30 +74,15 @@ int create_socket(){
 	
 	printf("Program 4: Połączony z serwerem.\n"); 
 
-	return sockfd;
-} 
-
-
-
-int main(){
-
-	uint32_t received;	
-	ssize_t readed=0;	
-	ssize_t writed;
-
-	printf("\nProgram 4_chrdev\n");
-
-	sockfd=create_socket();
-
-	fd = open(CHRDEV_PATH, O_RDONLY);
+	fd_dev = open(CHRDEV_PATH, O_RDONLY);
 		
-	if (fd < 0){
+	if (fd_dev < 0){
 		perror("Program 4: Failed to open the device CHRDEV");
 		exit(-1);
  	}
 
 	while (1){ 
-		readed=read(fd, &received, sizeof(uint32_t)); 
+		readed=read(fd_dev, &received, sizeof(uint32_t)); 
 		if (readed < 0){
 			perror("Program 4: Couldn't read from CHRDEV");
 			exit(-1);
@@ -88,7 +90,9 @@ int main(){
 		
 		if (readed>0){		
 			printf("Program 4 otrzymal wartosc %i\n", received);
-			writed = write(sockfd, &received, sizeof(uint32_t));
+			received = lustrzane_odbicie(received);
+			printf("Program 4: wartosc po lustrzane odbicie = %i\n", received);
+			writed = write(fd_sock, &received, sizeof(uint32_t));
 			printf("Program 4 send %li bytes\n", writed);
 		}
 		sleep(0.5);

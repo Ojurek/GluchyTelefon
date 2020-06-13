@@ -1,12 +1,11 @@
 #include "6_server.h"
 
-static int sock_fd;
+static int fd_sock;
 
 void sig_handler(int sig, siginfo_t* info, void *uncotext){
 
 	printf("Program 6: signal handler\n");
-	system("ps");
-	close(sock_fd);
+	close(fd_sock);
 	exit(0);
 }
 
@@ -20,15 +19,25 @@ void catch_signal(int sig){
 	sigaction(sig,&my_sigact,NULL);
 }
 
-int initialize_server(int *sock_fd) 
-{ 
+	
+int main(){
+
 	int conn_fd;
+	uint32_t received[100];	
 	socklen_t len; 
-	struct sockaddr_in servaddr, cli; 
+	struct sockaddr_in servaddr, cli;  
+	//char test[1000];
+	
+	printf("\nProgram 6_server uruchomiony\n");
+
+	catch_signal(SIGINT);
+
+	//////inicjacja serwera
+
 
 	// Utwórz serwer 
-	*sock_fd = socket(AF_INET, SOCK_STREAM, 0); 
-	if (*sock_fd == -1)
+	fd_sock = socket(AF_INET, SOCK_STREAM, 0); 
+	if (fd_sock == -1)
 	{ 
 		printf("Program 6: Niepowodzenie w utworzeniu serwera...\n"); 
 		exit(-1); 
@@ -44,7 +53,7 @@ int initialize_server(int *sock_fd)
 	servaddr.sin_port = htons(PORT); 
 
 	// Połącz nowo stworzony serwer do podanego IP 
-	if ((bind(*sock_fd, (SA*)&servaddr, sizeof(servaddr))) != 0) { 
+	if ((bind(fd_sock, (SA*)&servaddr, sizeof(servaddr))) != 0) { 
 		printf("Program 6: Połączenie serwera nie udało się...\n"); 
 		perror("Program 6: Error printed by perror");
 		exit(-1); 
@@ -53,7 +62,7 @@ int initialize_server(int *sock_fd)
 		printf("Program 6: Serwer został połączony \"binded\"..\n"); 
 
 	// Serwer oczekuje na połączenie od klienta - nasłuchiwanie
-	if ((listen(*sock_fd, 5)) != 0) { 
+	if ((listen(fd_sock, 5)) != 0) { 
 		printf("Program 6: Niepowodzenie nasłuchiwania...\n"); 
 		exit(-1); 
 	} 
@@ -64,7 +73,7 @@ int initialize_server(int *sock_fd)
 	len = sizeof(cli); 
 
 	// Zaakceptopwanie pakietu danych od klienta 
-	conn_fd = accept(*sock_fd, (SA*)&cli, &len); 
+	conn_fd = accept(fd_sock, (SA*)&cli, &len); 
 	if (conn_fd < 0) { 
 		printf("Program 6: Nie udalo sie zaakceptowac polaczenia z klientem\n"); 
 		exit(-1); 
@@ -73,25 +82,13 @@ int initialize_server(int *sock_fd)
 		printf("Program 6: Pomyślnie zaakceptowano połączenie z klientem.\n"); 
 	}	
 	
-	// Zwróc deskryptor pliku do głównego programu
-	return conn_fd;
-}
+	///koniec inicjalizacji serwera
 
-	
-int main(){
-
-	int conn_fd;
-	uint32_t received;	 
-	
-	printf("\nProgram 6_server uruchomiony\n");
-
-	catch_signal(SIGINT);
-
-	conn_fd = initialize_server(&sock_fd);
 	printf("\nProgram 6: zainicjowany\n");	
 	while(1){	
-		if (read(conn_fd, &received, sizeof(uint32_t))>0){ 
-			printf("Program 6 otrzymal wiadomość: %i ", received); 
+		if ((read(conn_fd, received, sizeof(received)))>0){ 
+			printf("Program 6 otrzymal wiadomość: %i ", received[0]); 
+			//printf("Program 6 otrzymal wiadomość: %s ", test); 
 		}
 	sleep(0.5);
 	}
