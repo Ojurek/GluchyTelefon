@@ -1,3 +1,7 @@
+//6.	"Sieć"
+//◦	Wejście: Stream tcp
+//◦	Wyjście: stdout na osobnej konsoli -> zmodyfikowana liczba lub info o przekroczeniu zakresu
+
 #include "6_server.h"
 
 static int fd_sock;
