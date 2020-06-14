@@ -1,4 +1,11 @@
-//Character device implemented as kernel module driver receive program
+//4.	"Jajko"
+//◦	Wejście: interfejs znakowy (linux kernel module over chrdev)
+//◦	Modyfikacja/wyjście: lustrzane odbicie bitów, np. dla x:= 524288 dec (bin: 00000000000010000000000000000000) dla x = 4096 dec (bin: 00000000000000000001000000000000)
+//5.	"Netlink"
+//◦	Wejście: Generic netlink  ---- netlink nie działa
+//◦	Modyfikacja/wyjście:
+//▪	x:= suma cyfr liczby x w postaci dziesiętnej
+
 
 #include "4_chrdev.h"
 
