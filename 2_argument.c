@@ -1,5 +1,7 @@
-//Wejscie: argument do programu parsowany za pomoca getopt
-//Modyfikacja/wyjscie x=Nastepna liczba pierwsza
+//2.	"Argument"
+//◦	Wejście: argument do programu parsowany za pomocą getopt
+//◦	Modyfikacja/wyjście: x:= Następna liczba pierwsza 
+
 
 #include "2_argument.h"
 
