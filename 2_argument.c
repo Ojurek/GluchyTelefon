@@ -1,18 +1,31 @@
 //Wejscie: argument do programu parsowany za pomoca getopt
 //Modyfikacja/wyjscie x=Nastepna liczba pierwsza
 
+#include "2_argument.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdint.h>
+int main(int argc, char* argv[]){
 
+	uint32_t received;
+	int fd;
+	
+	received = getopt(argc,argv,"0123456789")-'0';
 
-#define FIFO "/tmp/myfifo"
+ 	printf("Program 2: orzymano liczbe: %i\n", received);
 
+	received = next_prime_no(received);	
+ 	printf("Program 2: kolejna liczba pierwsza = %i\n", received);	
+
+	fd = open(FIFO, O_WRONLY);
+	if (fd < 0){
+		printf("Program 2: nie udalo sie otworzyc FIFO");
+		killpg(getpgid(getpid()),SIGINT);
+ 	}
+
+	write(fd, &received, sizeof(uint32_t)); 
+
+	close(fd);	
+return 0;
+}
 
 int next_prime_no(int number){
 
@@ -39,29 +52,4 @@ int next_prime_no(int number){
 	number+=2;
 	}
  return number-2;
-}
-
-
-int main(int argc, char* argv[]){
-
-	uint32_t received;
-	int fd;
-	ssize_t send=0;
-	
-	received = getopt(argc,argv,"0123456789")-'0';
-	printf("\n\nProgram 2_argument\n");
- 	printf("Program 2 otrzymal %i\n", received);
-
-	received = next_prime_no(received);	
-
-
-
-	fd = open(FIFO, O_WRONLY);
-	
-	//TODO obsuga bledu jesli nie otrzymamy fd
-	send= write(fd, &received, sizeof(uint32_t)); 
-	send++;//TODO usunac
-	close(fd);	
-
-return 0;
 }

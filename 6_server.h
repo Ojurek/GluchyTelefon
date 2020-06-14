@@ -1,6 +1,3 @@
-#ifndef _6_SERVER_
-#define _6_SERVER_
-
 #include <unistd.h>
 #include <stdio.h> 
 #include <netdb.h> 
@@ -18,8 +15,6 @@
 #define PORT 8080 
 #define SA struct sockaddr 
 
-void run(int sockfd);
-int initialize_server(int *sockfd);
-void receive (int sockfd) ;
-	
-#endif
+void sig_handler(int sig, siginfo_t* info, void *uncotext);
+void catch_signal(int sig);	
+

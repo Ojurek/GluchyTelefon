@@ -10,10 +10,10 @@
 #include <string.h>
 
 #define CHRDEV_PATH "/dev/jajko"
+#define FIFO "/tmp/myfifo"
 
-//funkcja wyślij po character device
+void sig_handler(int sig, siginfo_t* info, void *uncotext);
+void catch_signal(int sig);	
 void send(uint32_t received);
-
-//funkcja ustawiająca bit na wymaganej pozycji position
 uint32_t set_bit(uint32_t bit);
 

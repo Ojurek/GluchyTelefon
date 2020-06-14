@@ -18,10 +18,10 @@
 
 #define CHRDEV_PATH "/dev/jajko"
 
-long int receive();
-//void gt_send(const unsigned int);
-//long int transform(const long int);
-
+void sig_handler(int sig, siginfo_t* info, void *uncotext);
+void catch_signal(int sig);	
+uint32_t lustrzane_odbicie(uint32_t number);
+uint32_t sumowanie_cyfr(uint32_t number);
 
 
 
