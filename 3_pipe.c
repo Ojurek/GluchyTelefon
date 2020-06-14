@@ -1,3 +1,7 @@
+//3.	"Pipe"
+//◦	Wejście: Nazwany pipe
+//◦	Modyfikacja/wyjście: x:= ustawienie bitu na pozycji określonej przez x  
+
 #include "3_pipe.h"
 
 static int fd_pipe;
