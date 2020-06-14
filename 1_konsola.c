@@ -1,6 +1,7 @@
-// to jest pierwszy plik
-// pobiera argument z konsoli i przekazuje go do kolejnego programu
-// uruchamiając go z parametrami obsługiwanymi przez get opt w 2 programie 
+//1.	"Konsola":
+//◦	Wejście: stdin
+//◦	Modyfikacja/wyjście: x:=x modulo 10
+
 
 #include "1_konsola.h"
 
